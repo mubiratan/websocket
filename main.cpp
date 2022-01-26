@@ -6,7 +6,6 @@
 
 using tcp = boost::asio::ip::tcp;
 
-
 int main()
 {
     auto const address = boost::asio::ip::make_address("127.0.0.1");
@@ -24,18 +23,18 @@ int main()
         std::cout << "socket accepted" << std::endl;
 
         std::thread{[q = std::move(socket)]() mutable {
-                    boost::beast::websocket::stream<tcp::socket> ws{std::move(q)};
+            boost::beast::websocket::stream<tcp::socket> ws{std::move(q)};
 
-                    ws.accept();
+            ws.accept();
 
-                    while(1)
-                    {
-                        boost::beast::flat_buffer buffer;
-                        ws.read(buffer);
+            while(1)
+            {
+                boost::beast::flat_buffer buffer;
+                ws.read(buffer);
 
-                        auto out = boost::beast::buffers_to_string(buffer.cdata());
-                        std::cout << out << std::endl;
-                    }
+                auto out = boost::beast::buffers_to_string(buffer.cdata());
+                std::cout << out << std::endl;
+            }
 
 
         }}.detach();
